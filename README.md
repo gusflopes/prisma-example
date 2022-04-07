@@ -11,7 +11,15 @@ npx prisma migrate deploy
 # Abrir o Prisma Studio - usar somente após migration
 npx prisma studio
 
+# Generate ERD
+npx prisma generate
+
+# Introspect // Gerar schema.prisma com base no banco de dados
+yarn prisma introspect
+
 ```
+
+## Other generators
 
 ## Tabela Pivo entre User e Tenant
 

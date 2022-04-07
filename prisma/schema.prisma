@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,21 +11,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum RolePermission {
+  OWNER
+  ADMIN
+  USER
+  CLIENT
+}
+
+model Permission {
+  id         String         @id
+  tenant_id  String?
+  user_id    String?
+  created_at DateTime       @default(now())
+  updated_at DateTime
+  role       RolePermission @default(CLIENT)
+  tenants    Tenant?        @relation("permissionsTotenants", fields: [tenant_id], references: [id])
+  users      User?          @relation("permissionsTousers", fields: [user_id], references: [id])
+
+  @@map("permissions")
+}
+
 model User {
-  id       String @id @default(uuid())
-  name     String
-  email    String @unique
-  password String
+  id          String       @id @default(uuid())
+  name        String
+  email       String       @unique
+  password    String
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  permissions Permission[] @relation("permissionsTousers")
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
+  @@index([name])
   @@map("users")
 }
 
 model Tenant {
-  id   String @id @default(uuid())
-  name String
+  id          String       @id @default(uuid())
+  name        String
+  Contact     Contact[]    @relation("ContactTotenants")
+  permissions Permission[] @relation("permissionsTotenants")
 
   @@map("tenants")
 }
@@ -38,6 +58,18 @@ model Contact {
   name        String
   description String?
   slug        String  @unique
+  tenant_id   String
+  tenants     Tenant  @relation("ContactTotenants", fields: [tenant_id], references: [id])
+}
 
-  @@map("contacts")
+model ContactType {
+  id String @id
+}
+
+model Lawsuit {
+  id String @id
+}
+
+model Task {
+  id String @id
 }
