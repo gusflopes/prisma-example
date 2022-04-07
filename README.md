@@ -2,7 +2,7 @@
 
 ```bash
 # Migrate ambiente dev
-npx prisma migrate dev
+npx prisma migrate dev --name XXXX
 
 # Migrate ambiente de prod // Aplica as migrations
 # Antes disso tem que fazer um diff

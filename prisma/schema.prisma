@@ -19,7 +19,7 @@ enum RolePermission {
 }
 
 model Permission {
-  id         String         @id
+  id         String         @id @default(uuid())
   tenant_id  String?
   user_id    String?
   created_at DateTime       @default(now())
